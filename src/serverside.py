@@ -1,25 +1,30 @@
 class ServerSide:
     def __init__(self, address, port):
         import socket
-        import threading
 
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((address, port))
-        self.server.listen(16)
-        print("Server side is up")
-        while True:
-            cs, ca = self.server.accept()
-            cthread = threading.Thread(target=self.running, args=(False, cs, ca))
-            cthread.daemon = True
-            cthread.start()
+        self.server.listen(1)
+        self.server.setblocking(1)
+        print("[SERVER] - Server side is up")
+        self.running(False)
 
-    def running(self, end, cs, ca):
+    def running(self, end):
         while not end:
-            print("Received connection from ".format(ca))
-            cs.send(bytes("HENLO" + str(cs), "utf-8"))
+            cs, ca = self.server.accept()
+            cs.setblocking(1)
+            print("[SERVER] - Received connection from ", str(ca))
+            
+            query = cs.recv(256).decode("utf-8")
+            if not query: continue
 
-            print("ok")
-            end = True
-            print("ending...")
+            result = self.search_ratings(query)
+            cs.send(result.encode("utf-8"))
+            cs.close()
 
         self.server.close()
+
+    def search_ratings(self, query):
+        result = "HIT BOYO"
+        return result

@@ -3,17 +3,35 @@ class ClientSide:
         import socket
 
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.connect((address, port))
-        print("Client side is up")
+        self.client.connect(("127.0.0.1", 6789))
+        
+        print("[CLIENT] - Client side is up")
         self.running(False)
 
     def running(self, end):
         while not end:
-            greet = self.client.recv(64)
-            greet = greet.decode("utf-8")
+            self.query_network()
 
-            print(greet)
-            end = True
-            print("ending client_side")
+            opt = input("[CLIENT] - Another query?(Y/n)").lower()
+            if opt == 'y' or opt == '': pass
+            else:
+                end = True
+                print("[CLIENT] - Closing client side...")
 
         self.client.close()
+
+    def query_network(self):
+        query = input("[CLIENT] - Name a movie")
+       
+        # try:
+        
+        self.client.send(query.encode("utf-8"))
+        result = self.client.recv(2048).decode("utf-8")
+        print("[CLIENT] - ", result)   
+        # except OSError:
+        #     print("OSERROR")
+        # except BrokenPipeError:
+        #     print("Pipe's broken fam")
+        # finally:
+        #     self.client.close()
+        
