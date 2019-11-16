@@ -1,7 +1,7 @@
+import socket
+
 class ServerSide:
     def __init__(self, address, port):
-        import socket
-
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((address, port))
