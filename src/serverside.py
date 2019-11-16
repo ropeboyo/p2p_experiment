@@ -1,4 +1,4 @@
-import socket
+import socket, csv
 
 class ServerSide:
     def __init__(self, address, port):
@@ -8,9 +8,9 @@ class ServerSide:
         self.server.listen(1)
         self.server.setblocking(1)
         print("[SERVER] - Server side is up")
-        self.running(False)
+        self.running(False, address, port)
 
-    def running(self, end):
+    def running(self, end, address, port):
         while not end:
             cs, ca = self.server.accept()
             cs.setblocking(1)
@@ -26,5 +26,16 @@ class ServerSide:
         self.server.close()
 
     def search_ratings(self, query):
-        result = "HIT BOYO"
+        with open("my_ratings.csv", 'rt', encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            c1, c2, c3, c4 = reader.fieldnames
+            result = ''
+
+            for row in reader:
+                if row[c1] == query:
+                    result = row[c1] + " - " + row[c2] + " - " + row[c3] + " - " + row[c4]
+
+        if result == '':
+            result = 'TITLE_NOT_FOUND'
+        
         return result
