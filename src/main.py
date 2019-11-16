@@ -1,9 +1,11 @@
-import clientside as cs
-import serverside as ss
+import src.clientside as cs
+import src.serverside as ss
 import threading
 import csv
 
-serverside = threading.Thread(target=ss.ServerSide, args=("127.0.0.1", 6789))
+server_ip = input("Server ip?\n")
+
+serverside = threading.Thread(target=ss.ServerSide, args=(server_ip, 6789))
 clientside = threading.Thread(target=cs.ClientSide, args=("127.0.0.1", 6789))
 
 dict = [

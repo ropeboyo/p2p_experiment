@@ -1,4 +1,6 @@
-import socket, csv
+import csv
+import socket
+
 
 class ServerSide:
     def __init__(self, address, port):
@@ -8,9 +10,9 @@ class ServerSide:
         self.server.listen(1)
         self.server.setblocking(1)
         print("[SERVER] - Server side is up")
-        self.running(False, address, port)
+        self.running(False)
 
-    def running(self, end, address, port):
+    def running(self, end):
         while not end:
             cs, ca = self.server.accept()
             cs.setblocking(1)
